@@ -63,4 +63,14 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    val app_compat = "1.4.1"
+    implementation ("androidx.appcompat:appcompat:$app_compat")
+
+    val constraint_layout = "2.0.4"
+    implementation ("androidx.constraintlayout:constraintlayout:$constraint_layout")
+
+    val nav_version = "2.3.2"
+    implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
+    implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
 }

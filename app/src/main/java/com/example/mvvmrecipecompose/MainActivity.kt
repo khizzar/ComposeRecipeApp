@@ -3,6 +3,7 @@ package com.example.mvvmrecipecompose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -28,45 +29,46 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.example.mvvmrecipecompose.ui.theme.MVVMRecipeComposeTheme
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            Column(modifier = Modifier
-                .fillMaxSize()) {
-                Image(painter = painterResource(id = R.drawable.happy_meal),
-                    contentDescription = "happy meal", contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .height(300.dp)
-                        .fillMaxWidth())
-
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text(text = "Happy Meal", style = TextStyle(
-                            fontSize = TextUnit(26f, TextUnitType.Sp)
-                        ))
-
-                        Text(text = "600 Rs", style = TextStyle(
-                            fontSize = TextUnit(17f, TextUnitType.Sp),
-                            color = Color(android.graphics.Color.GREEN)
-                        ), modifier = Modifier.align(Alignment.CenterVertically))
-                    }
-
-                    Spacer(modifier = Modifier.padding(top = 10.dp))
-
-                    Text(text = "500 Calories", style = TextStyle(
-                        fontSize = TextUnit(17f, TextUnitType.Sp)
-                    ))
-
-                    Spacer(modifier = Modifier.padding(top = 10.dp))
-
-                    Button(onClick = { /*TODO*/ }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                        Text(text = "Order Now")
-                    }
-
-                }
-            }
-        }
+        setContentView(R.layout.activity_main)
+//        setContent {
+//            Column(modifier = Modifier
+//                .fillMaxSize()) {
+//                Image(painter = painterResource(id = R.drawable.happy_meal),
+//                    contentDescription = "happy meal", contentScale = ContentScale.Crop,
+//                    modifier = Modifier
+//                        .height(300.dp)
+//                        .fillMaxWidth())
+//
+//                Column(modifier = Modifier.padding(16.dp)) {
+//                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+//                        Text(text = "Happy Meal", style = TextStyle(
+//                            fontSize = TextUnit(26f, TextUnitType.Sp)
+//                        ))
+//
+//                        Text(text = "600 Rs", style = TextStyle(
+//                            fontSize = TextUnit(17f, TextUnitType.Sp),
+//                            color = Color(android.graphics.Color.GREEN)
+//                        ), modifier = Modifier.align(Alignment.CenterVertically))
+//                    }
+//
+//                    Spacer(modifier = Modifier.padding(top = 10.dp))
+//
+//                    Text(text = "500 Calories", style = TextStyle(
+//                        fontSize = TextUnit(17f, TextUnitType.Sp)
+//                    ))
+//
+//                    Spacer(modifier = Modifier.padding(top = 10.dp))
+//
+//                    Button(onClick = { /*TODO*/ }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
+//                        Text(text = "Order Now")
+//                    }
+//
+//                }
+//            }
+//        }
     }
 }
 
