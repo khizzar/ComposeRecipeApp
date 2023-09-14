@@ -1,11 +1,11 @@
 package com.example.mvvmrecipecompose.network.models
 
 import com.example.mvvmrecipecompose.domain.Recipe
-import com.example.mvvmrecipecompose.network.models.util.EntityMapper
+import com.example.mvvmrecipecompose.network.models.util.DomainMapper
 
-class RecipeEntityMapper: EntityMapper<RecipeNetworkEntity, Recipe> {
+class RecipeDtoMapper: DomainMapper<RecipeDto, Recipe> {
 
-    override fun mapFromEntity(entity: RecipeNetworkEntity): Recipe {
+    override fun mapToDomainModel(entity: RecipeDto): Recipe {
         return Recipe(
             id = entity.pk,
             title = entity.title,
@@ -21,8 +21,8 @@ class RecipeEntityMapper: EntityMapper<RecipeNetworkEntity, Recipe> {
         )
     }
 
-    override fun mapToEntity(domainModel: Recipe): RecipeNetworkEntity {
-        return RecipeNetworkEntity(
+    override fun mapFromDomainModel(domainModel: Recipe): RecipeDto {
+        return RecipeDto(
             pk = domainModel.id,
             title = domainModel.title,
             featuredImage = domainModel.featuredImage,
@@ -37,12 +37,12 @@ class RecipeEntityMapper: EntityMapper<RecipeNetworkEntity, Recipe> {
         )
     }
 
-    fun fromEntityList(initial: List<RecipeNetworkEntity>): List<Recipe>{
-        return initial.map { mapFromEntity(it) }
+    fun toDomainList(initial: List<RecipeDto>): List<Recipe>{
+        return initial.map { mapToDomainModel(it) }
     }
 
-    fun toEntityList(initial: List<Recipe>): List<RecipeNetworkEntity>{
-        return initial.map { mapToEntity(it) }
+    fun fromDomainList(initial: List<Recipe>): List<RecipeDto>{
+        return initial.map { mapFromDomainModel(it) }
     }
 
 
