@@ -11,7 +11,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -39,7 +43,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.example.mvvmrecipecompose.R
+import com.example.mvvmrecipecompose.presentation.ui.components.FoodCategoryChip
 import com.example.mvvmrecipecompose.presentation.ui.components.RecipeCard
+import com.example.mvvmrecipecompose.presentation.ui.components.SearchAppBar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -58,42 +64,21 @@ class RecipeListFragment : Fragment() {
 
                 val recipes = viewModel.recipes.value
                 val query = viewModel.recipeQuery.value
+                val selectedCategory = viewModel.selectedCategory.value
+                val scrollState = rememberLazyListState()
                 val keyboardController = LocalSoftwareKeyboardController.current
 
                 Column {
 
-                    Surface(
-                        modifier = Modifier.fillMaxWidth(),
-                        color = MaterialTheme.colorScheme.primary, shadowElevation = 8.dp
-                    ) {
-
-                        Row(modifier = Modifier.fillMaxWidth()) {
-                            TextField(value = query,
-                                modifier = Modifier.fillMaxWidth(0.9f),
-                                onValueChange = { viewModel.onRecipeQueryChange(it) },
-                                label = { Text(text = "Search") },
-                                leadingIcon = {
-                                    Icon(
-                                        imageVector = Icons.Filled.Search,
-                                        contentDescription = null
-                                    )
-                                },
-                                keyboardOptions = KeyboardOptions(
-                                    keyboardType = KeyboardType.Text,
-                                    imeAction = ImeAction.Search
-                                ),
-                                textStyle = TextStyle(
-                                    color = MaterialTheme.colorScheme.onSurface
-                                ),
-                                keyboardActions = KeyboardActions(
-                                    onSearch = {
-                                        viewModel.newSearch(query)
-                                        keyboardController?.hide()
-                                    }
-                                )
-                            )
-                        }
-
+                    keyboardController?.let {
+                        SearchAppBar(
+                            query = query,
+                            onRecipeQueryChange = viewModel::onRecipeQueryChange,
+                            onNewSearch = viewModel::newSearch,
+                            selectedCategory = selectedCategory,
+                            onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
+                            keyboardController = it
+                        )
                     }
 
                     LazyColumn {

@@ -21,19 +21,20 @@ constructor(
 ): ViewModel(){
 
     val recipes: MutableState<List<Recipe>> = mutableStateOf(ArrayList())
-
     var recipeQuery = mutableStateOf("")
+    val selectedCategory: MutableState<FoodCategory?> = mutableStateOf(null)
+    var categoryScrollPosition: Float = 0f
 
     init {
-        newSearch("Chicken")
+        newSearch()
     }
 
-    fun newSearch(query: String){
+    fun newSearch(){
         viewModelScope.launch {
             val result = repository.search(
                 token = token,
                 page = 1,
-                query = query
+                query = recipeQuery.value
             )
             recipes.value = result
         }
@@ -41,5 +42,15 @@ constructor(
 
     fun onRecipeQueryChange(query: String) {
         this.recipeQuery.value = query
+    }
+
+    fun onSelectedCategoryChanged(category: String){
+        val newCategory = getFoodCategory(category)
+        selectedCategory.value = newCategory
+        onRecipeQueryChange(category)
+    }
+
+    fun onCategoryClickPosition(position: Float) {
+        this.categoryScrollPosition = position
     }
 }
