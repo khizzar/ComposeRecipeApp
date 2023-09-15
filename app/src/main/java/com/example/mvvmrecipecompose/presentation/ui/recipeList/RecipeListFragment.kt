@@ -5,9 +5,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -43,6 +45,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.example.mvvmrecipecompose.R
+import com.example.mvvmrecipecompose.presentation.ui.components.CircularIndeterminateProgressBar
 import com.example.mvvmrecipecompose.presentation.ui.components.FoodCategoryChip
 import com.example.mvvmrecipecompose.presentation.ui.components.RecipeCard
 import com.example.mvvmrecipecompose.presentation.ui.components.SearchAppBar
@@ -65,7 +68,7 @@ class RecipeListFragment : Fragment() {
                 val recipes = viewModel.recipes.value
                 val query = viewModel.recipeQuery.value
                 val selectedCategory = viewModel.selectedCategory.value
-                val scrollState = rememberLazyListState()
+                val isLoading = viewModel.isLoading.value
                 val keyboardController = LocalSoftwareKeyboardController.current
 
                 Column {
@@ -81,12 +84,17 @@ class RecipeListFragment : Fragment() {
                         )
                     }
 
-                    LazyColumn {
-                        itemsIndexed(
-                            items = recipes
-                        ) { index, recipe ->
-                            RecipeCard(recipe = recipe) {}
+                    Box(modifier = Modifier.fillMaxSize()) { // box is used just like the framelayout to place one view on top of the other one
+
+                        LazyColumn {
+                            itemsIndexed(
+                                items = recipes
+                            ) { index, recipe ->
+                                RecipeCard(recipe = recipe) {}
+                            }
                         }
+
+                        CircularIndeterminateProgressBar(isDisplayed = isLoading)
                     }
                 }
 
