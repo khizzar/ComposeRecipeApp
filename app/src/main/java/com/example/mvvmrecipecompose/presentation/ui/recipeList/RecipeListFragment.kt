@@ -68,22 +68,14 @@ class RecipeListFragment : Fragment() {
                         )
                     }
 
-                    Box(modifier = Modifier.fillMaxSize()) { // box is used just like the framelayout to place one view on top of the other one
-
-                        LazyColumn {
-                            itemsIndexed(
-                                items = recipes
-                            ) { index, recipe ->
-                                viewModel.onChangeRecipeScrollPosition(index)
-                                if ((index + 1) >= (page * PAGE_SIZE) && !isLoading) {
-                                    viewModel.onTriggerEvent(NextPageEvent)
-                                }
-                                RecipeCard(recipe = recipe) {}
-                            }
-                        }
-
-                        CircularIndeterminateProgressBar(isDisplayed = isLoading)
-                    }
+                    RecipeList(
+                        page = page,
+                        isLoading = isLoading,
+                        recipes = recipes,
+                        navController = findNavController(),
+                        onNextPageCall = {viewModel.onTriggerEvent(NextPageEvent)},
+                        onChangeRecipeScrollPosition = viewModel::onChangeRecipeScrollPosition
+                    )
                 }
 
             }
