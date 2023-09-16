@@ -69,6 +69,7 @@ class RecipeListFragment : Fragment() {
                 val query = viewModel.recipeQuery.value
                 val selectedCategory = viewModel.selectedCategory.value
                 val isLoading = viewModel.isLoading.value
+                val page = viewModel.page.value
                 val keyboardController = LocalSoftwareKeyboardController.current
 
                 Column {
@@ -90,6 +91,10 @@ class RecipeListFragment : Fragment() {
                             itemsIndexed(
                                 items = recipes
                             ) { index, recipe ->
+                                viewModel.onChangeRecipeScrollPosition(index)
+                                if ((index + 1) >= (page * PAGE_SIZE) && !isLoading) {
+                                    viewModel.nextPage()
+                                }
                                 RecipeCard(recipe = recipe) {}
                             }
                         }
