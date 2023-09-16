@@ -1,12 +1,14 @@
 package com.example.mvvmrecipecompose.presentation.ui.recipeList
 
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mvvmrecipecompose.domain.Recipe
 import com.example.mvvmrecipecompose.network.models.repository.RecipeRepository
+import com.example.mvvmrecipecompose.presentation.ui.recipeList.RecipeListEvent.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -31,46 +33,66 @@ constructor(
     private var recipeListScrollPosition: Int = 0
 
     init {
-        newSearch()
+        onTriggerEvent(NewSearchEvent)
     }
 
-    fun newSearch() {
+    fun onTriggerEvent(event: RecipeListEvent) {
         viewModelScope.launch {
-            isLoading.value = true
-            resetSearchState()
-            delay(2000)
-            val result = repository.search(
-                token = token,
-                page = 1,
-                query = recipeQuery.value
-            )
-            recipes.value = result
-            isLoading.value = false
-        }
-    }
+            try {
+                when (event) {
+                    is NewSearchEvent -> {
+                        newSearch()
+                    }
 
-    fun nextPage() {
-        viewModelScope.launch {
-            // prevent duplicate event due to recompose happening to quickly
-            if ((recipeListScrollPosition + 1) >= (page.value * PAGE_SIZE)) {
-                isLoading.value = true
-                updatePageNumber()
-
-                // just to show pagination, api is fast
-                delay(1000)
-
-                // this will prevent this function to be called on the start because on start newSearch is to be called
-                if (page.value > 1) {
-                    val result = repository.search(
-                        token = token,
-                        page = page.value,
-                        query = recipeQuery.value
-                    )
-                    appendRecipes(result)
+                    is NextPageEvent -> {
+                        nextPage()
+                    }
                 }
-                isLoading.value = false
+            } catch (e: Exception) {
+                Log.e("Mango", "launchJob: Exception: ${e}, ${e.cause}")
+                e.printStackTrace()
+            } finally {
+                Log.d("Mango", "launchJob: finally called.")
             }
         }
+    }
+
+
+    private suspend fun newSearch() {
+        isLoading.value = true
+        resetSearchState()
+        delay(2000)
+        val result = repository.search(
+            token = token,
+            page = 1,
+            query = recipeQuery.value
+        )
+        recipes.value = result
+        isLoading.value = false
+
+    }
+
+    private suspend fun nextPage() {
+        // prevent duplicate event due to recompose happening to quickly
+        if ((recipeListScrollPosition + 1) >= (page.value * PAGE_SIZE)) {
+            isLoading.value = true
+            updatePageNumber()
+
+            // just to show pagination, api is fast
+            delay(1000)
+
+            // this will prevent this function to be called on the start because on start newSearch is to be called
+            if (page.value > 1) {
+                val result = repository.search(
+                    token = token,
+                    page = page.value,
+                    query = recipeQuery.value
+                )
+                appendRecipes(result)
+            }
+            isLoading.value = false
+        }
+
     }
 
     fun onRecipeQueryChange(query: String) {
@@ -112,6 +134,10 @@ constructor(
 
     fun onChangeRecipeScrollPosition(position: Int) {
         recipeListScrollPosition = position
+    }
+
+    fun goToNextPage() {
+        onTriggerEvent(NextPageEvent)
     }
 
 }

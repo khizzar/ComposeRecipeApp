@@ -1,33 +1,15 @@
 package com.example.mvvmrecipecompose.presentation.ui.recipeList
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -49,6 +31,7 @@ import com.example.mvvmrecipecompose.presentation.ui.components.CircularIndeterm
 import com.example.mvvmrecipecompose.presentation.ui.components.FoodCategoryChip
 import com.example.mvvmrecipecompose.presentation.ui.components.RecipeCard
 import com.example.mvvmrecipecompose.presentation.ui.components.SearchAppBar
+import com.example.mvvmrecipecompose.presentation.ui.recipeList.RecipeListEvent.*
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -78,7 +61,7 @@ class RecipeListFragment : Fragment() {
                         SearchAppBar(
                             query = query,
                             onRecipeQueryChange = viewModel::onRecipeQueryChange,
-                            onNewSearch = viewModel::newSearch,
+                            onNewSearch = viewModel::goToNextPage,
                             selectedCategory = selectedCategory,
                             onSelectedCategoryChanged = viewModel::onSelectedCategoryChanged,
                             keyboardController = it
@@ -93,7 +76,7 @@ class RecipeListFragment : Fragment() {
                             ) { index, recipe ->
                                 viewModel.onChangeRecipeScrollPosition(index)
                                 if ((index + 1) >= (page * PAGE_SIZE) && !isLoading) {
-                                    viewModel.nextPage()
+                                    viewModel.onTriggerEvent(NextPageEvent)
                                 }
                                 RecipeCard(recipe = recipe) {}
                             }
